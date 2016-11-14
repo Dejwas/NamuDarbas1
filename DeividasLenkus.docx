@@ -1,0 +1,30 @@
+3. Atlikite šiuos veiksmus:
+a) Papildykite autorių lentelę įrašais.
+INSERT INTO Authors (name) VALUES ('Jonas Biliunas'), ('Satrijos ragana');
+b) Papildykite knygų lentelę, įrašais apie knygas, kurių autorius įrašėte prieš tai. INSERT INTO Books (authorId, title, year) VALUES ('8', 'Kazkokia knyga', '1976'), ('9', 'Grazi Knyga', '1955');
+c) Išrinkite knygų informaciją prijungdami autorius iš autorių lentelės.
+SELECT * from Books LEFT JOIN Authors ON Books.authorId = Authors.authorId;
+d) Pakeiskite vienos knygos autorių į kitą.
+UPDATE Books SET authorId = '8' WHERE bookId = '6';
+e) Suskaičiuokite kiek knygų kiekvieno autoriaus yra duomenų bazėje (įtraukdami autorius kurie neturi knygų, bei neitraukdami šių autorių).
+SELECT name AS Name, COUNT(Books.authorId) AS BooksCount FROM Authors LEFT JOIN Books ON Books.authorId = Authors.authorId GROUP BY Authors.Name;
+SELECT name AS Name, COUNT(Books.authorId) AS BooksCount FROM Authors INNER JOIN Books ON Books.authorId = Authors.authorId GROUP BY Authors.Name;
+f) Pašalinkite jūsų suvestus autorius.
+DELETE FROM Authors WHERE authorId > 7;
+g) Pašalinkite knygas, kurios neturi autorių.
+DELETE FROM Books WHERE authorId IS NULL;
+4. Papildykite duomenų bazę kad būtų galima:
+a) Suskirstyti knygas į žanrus.
+ALTER TABLE Books ADD Genre varchar(255);
+UPDATE Books SET Genre = 'Pasaka' where bookId <11;
+b) Knygos gali turėti vieną ir daugiau autorių.
+CREATE TABLE BookAuthors (id int not null auto_increment, bookId int not null, authorId int not null, primary key(id)); 
+INSERT INTO BookAuthors (bookId, authorId) VALUES (’1’,’1’),(’2’,’2’),(’2’,’3’),(’3’,’4’),(’4’,’5’),(’5’,’4’),(’6’,’3’),(’9’,’2’),(’10’,’1’),(’10’,’2’);
+c) Sutvarkyti duomenų bazės duomenis, jei reikia papildykite naujais.
+UPDATE Books SET year = '1969' where bookId 6;
+d) Išrinkite visas knygas su jų autoriais. (autorius, jei jų daugiau nei veinas atskirkite kableliais)
+SELECT Books.title, GROUP_CONCAT(authorId) FROM Books INNER JOIN BookAuthors on Books.bookId = BookAuthors.bookId GROUP BY Books.title;
+e) Papildykite knygų lentelę, kad galetumėte išsaugoti orginalų knygos pavadinimą. (Pavadinime išsaugokite, lietuviškas raides kaip ą,ė,š ir pan.)
+UPDATE Books SET title = N'Kažkokia knyga' WHERE bookId = 10;
+UPDATE Books SET title = N'Graži knyga' WHERE bookId = 9;
+
